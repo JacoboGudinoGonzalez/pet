@@ -1,6 +1,6 @@
 package com.mx.nj.pet.controller;
 
-import java.sql.Timestamp;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +27,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mx.nj.pet.model.Follow;
 import com.mx.nj.pet.model.Pagination;
 import com.mx.nj.pet.model.Publication;
+import com.mx.nj.pet.model.Usuario;
 import com.mx.nj.pet.service.FollowService;
 import com.mx.nj.pet.service.PublicationService;
 import com.mx.nj.pet.util.Util;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 
 @Component
 @Path("/publicationController")
@@ -238,4 +241,33 @@ public class PublicationController {
 		return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
 	}
 	
+	@POST
+	@Path("/upload/{id}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadFile(
+			@PathParam("id") int id,
+			@FormDataParam("file") InputStream uploadedInputStream,
+			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+
+		String uploadedFileLocation = "C:/Users/jgudiño/Documents/workspace/petProject/backend/img/"
+				+ fileDetail.getFileName();
+
+		Publication issetPublication = publicationService.getPublication(id);
+		if(issetPublication!=null){
+			publicationService.updateFilePublication(id, fileDetail.getFileName());
+		}
+		// save it
+		Util.writeToFile(uploadedInputStream, uploadedFileLocation);
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+		issetPublication = publicationService.getPublication(id);
+		try {
+			String result = mapper.writeValueAsString(issetPublication);
+			return Response.status(Response.Status.OK).entity(result.toString()).build();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

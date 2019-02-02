@@ -18,4 +18,6 @@ public interface PublicationDAO {
 
 	int getPublicationCounters(int id);
 
+	void updateFilePublication(int id, String file);
+
 }

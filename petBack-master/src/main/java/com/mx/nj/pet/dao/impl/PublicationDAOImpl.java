@@ -107,4 +107,12 @@ public class PublicationDAOImpl implements PublicationDAO {
 		publicationCounters = Long.valueOf(query.list().get(0).toString()).intValue();
 		return publicationCounters;
 	}
+	
+	@Override
+	public void updateFilePublication(int id, String file) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Query query = session.createQuery("UPDATE Publication SET file =:file WHERE id =:id")
+				.setParameter("file", file).setParameter("id", id);
+		query.executeUpdate();
+	}
 }

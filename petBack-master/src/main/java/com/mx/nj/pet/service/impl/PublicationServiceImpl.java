@@ -44,4 +44,9 @@ public class PublicationServiceImpl implements PublicationService {
 	public int getPublicationCounters(int id) {
 		return publicationDao.getPublicationCounters(id);
 	}
+	
+	@Transactional
+	public void updateFilePublication(int id, String file){
+		publicationDao.updateFilePublication(id, file);
+	}
 }

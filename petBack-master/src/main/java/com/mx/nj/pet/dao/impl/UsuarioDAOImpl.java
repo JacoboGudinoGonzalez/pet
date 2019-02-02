@@ -24,6 +24,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 		this.sessionFactory = sf;
 	}
 
+	@Override
 	public List<Usuario> getAllUsers(String type) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query query = session.createQuery("select u.id, u.name, u.type, u.image, u.email, u.tel, u.rating, u.description"
@@ -49,6 +50,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 		return userList;
 	}
 	
+	@Override
 	public List<ServicePet> getUsersService(int idUser) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query query = session.createQuery("select s.id, s.usuario, s.idUserTo, s.dateFrom, s.date, "
@@ -75,6 +77,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 		return servicePetList;
 	}
 
+	@Override
 	public Usuario getUserByEmail(String email) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Usuario u where u.email = :email ");
@@ -82,11 +85,13 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 		return (Usuario)query.uniqueResult();
 	}
 
+	@Override
 	public Usuario getUserById(Integer id) {
 		Session session = this.sessionFactory.getCurrentSession();
 		return (Usuario) session.get(Usuario.class, id);
 	}
 
+	@Override
 	public Usuario login(String email, String password) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Usuario u where u.email = :email and u.password = :password");
@@ -95,17 +100,20 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 		return (Usuario)query.uniqueResult();
 	}
 
+	@Override
 	public Usuario addUser(Usuario usuario) {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.persist(usuario);
 		return usuario;
 	}
 
+	@Override
 	public void updateUser(Usuario usuario) {
 		Session session = this.sessionFactory.getCurrentSession();
 		session.update(usuario);
 	}
 
+	@Override
 	public void updateImageUser(int id, String image) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query query = session.createQuery("UPDATE Usuario SET image =:image WHERE id =:id")
@@ -113,6 +121,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 		query.executeUpdate();
 	}
 
+	@Override
 	public void deleteUser(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Usuario p = (Usuario) session.load(Usuario.class, new Integer(id));

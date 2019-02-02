@@ -20,4 +20,6 @@ public interface PublicationService {
 	void deletePublication(int publicationId, int userId);
 	
 	int getPublicationCounters(int id);
+	
+	void updateFilePublication(int id, String file);
 }
