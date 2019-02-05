@@ -237,8 +237,8 @@ public class PublicationController {
 		publicationService.deletePublication(id, Util.parseTokenToUser(authStringe).getId());
 		
 		JsonObject msj = Json.createObjectBuilder()
-				.add("msj", "no existen publicaci�n").build();
-		return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+				.add("msj", "eliminado").build();
+		return Response.status(Response.Status.OK).entity(msj.toString()).build();
 	}
 	
 	@POST

@@ -91,8 +91,9 @@ public class PublicationDAOImpl implements PublicationDAO {
 	@Override
 	public void deletePublication(int publicationId, int userId) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Query q = session.createQuery("delete Publication p where p.id =:publicationId AND usuario =:userId")
-				.setParameter("publicationId", publicationId).setParameter("userId", userId);
+		Query q = session.createQuery("delete Publication p where p.id =:publicationId AND usuario =:userId");
+		Usuario usuario = (Usuario) session.get(Usuario.class, userId);
+		q.setParameter("publicationId", publicationId).setParameter("userId", usuario);
 		q.executeUpdate();
 	}
 	
