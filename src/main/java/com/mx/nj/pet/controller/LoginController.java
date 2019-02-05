@@ -202,8 +202,8 @@ public class LoginController {
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
-		//String uploadedFileLocation = "C:/Users/jgudiÃ±o/Documents/workspace/petProject/backend/img/"
-		String uploadedFileLocation = "/Users/JACOBO/Documents/images/"
+		String uploadedFileLocation = "C:/Users/jgudiño/Documents/workspace/petProject/backend/img/"
+//		String uploadedFileLocation = "/Users/JACOBO/Documents/images/"
 				+ fileDetail.getFileName();
 
 		Usuario issetUser = usuarioService.getUserById(id);
@@ -229,8 +229,8 @@ public class LoginController {
 	@Path("/getImageFile/{imageFile}")
 	@Produces("image/png")
 	public Response getImageFile(@PathParam("imageFile") String imageFile){
-		//File file = new File("C:/Users/jgudiÃ±o/Documents/workspace/petProject/backend/img/"+imageFile);
-		File file = new File("/Users/JACOBO/Documents/images/"+imageFile);
+		File file = new File("C:/Users/jgudiño/Documents/workspace/petProject/backend/img/"+imageFile);
+//		File file = new File("/Users/JACOBO/Documents/images/"+imageFile);
 		if(file.exists() && !file.isDirectory()) { 
 			ResponseBuilder response = Response.ok((Object) file);
 			response.header("Content-Disposition",
@@ -238,8 +238,8 @@ public class LoginController {
 			return response.build();
 		}else {
 			imageFile = "default.jpg";
-			//file = new File("C:/Users/jgudiÃ±o/Documents/workspace/petProject/backend/img/"+imageFile);
-			file = new File("/Users/JACOBO/Documents/images/"+imageFile);
+			file = new File("C:/Users/jgudiño/Documents/workspace/petProject/backend/img/"+imageFile);
+//			file = new File("/Users/JACOBO/Documents/images/"+imageFile);
 			ResponseBuilder response = Response.ok((Object) file);
 			response.header("Content-Disposition",
 					"attachment; filename=image_from_server.png");
