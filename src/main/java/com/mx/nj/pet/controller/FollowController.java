@@ -106,8 +106,8 @@ public class FollowController {
 			List<Follow> followingList = followService.getMyFollows(userId);
 			if(followingList.isEmpty()){
 				JsonObject msj = Json.createObjectBuilder()
-						.add("msj", "No se sigue a ningún usuario").build();
-				return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+						.add("msj", "0").build();
+				return Response.status(Response.Status.OK).entity(msj.toString()).build();
 			}
 
 			int page = 1;
