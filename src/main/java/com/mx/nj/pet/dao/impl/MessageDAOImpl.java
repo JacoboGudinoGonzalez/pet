@@ -1,6 +1,6 @@
 package com.mx.nj.pet.dao.impl;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class MessageDAOImpl implements MessageDAO {
 
 		Session session = this.sessionFactory.getCurrentSession();	
 
-		String hql = "SELECT m.id, m.text, m.createdAt, m.emmiter, m.receiver m.viewed FROM Message m WHERE receiver =:userId";
+		String hql = "SELECT m.id, m.text, m.createdAt, m.emmiter, m.receiver, m.viewed FROM Message m WHERE receiver =:userId ORDER BY m.createdAt DESC";
 		Query query = session.createQuery(hql);
 		query.setParameter("userId", userId);
 		
@@ -47,10 +47,10 @@ public class MessageDAOImpl implements MessageDAO {
 				Message m = new Message();
 				m.setId((Integer)obj[0]);
 				m.setText((String)obj[1]);
-				m.setCreatedAt((Date)obj[2]);
+				m.setCreatedAt((Timestamp)obj[2]);
 				m.setEmmiter((Usuario)obj[3]);
 				m.setReceiver((Usuario)obj[4]);
-				m.setViewed((boolean)obj[4]);
+				m.setViewed((boolean)obj[5]);
 				messageList.add(m);
 			}
 		}
@@ -62,7 +62,7 @@ public class MessageDAOImpl implements MessageDAO {
 
 		Session session = this.sessionFactory.getCurrentSession();	
 
-		String hql = "SELECT m.id, m.text, m.createdAt, m.emmiter, m.receiver FROM Message m WHERE emmiter =:userId";
+		String hql = "SELECT m.id, m.text, m.createdAt, m.emmiter, m.receiver, m.viewed FROM Message m WHERE emmiter =:userId ORDER BY m.createdAt DESC";
 		Query query = session.createQuery(hql);
 		query.setParameter("userId", userId);
 		
@@ -73,9 +73,10 @@ public class MessageDAOImpl implements MessageDAO {
 				Message m = new Message();
 				m.setId((Integer)obj[0]);
 				m.setText((String)obj[1]);
-				m.setCreatedAt((Date)obj[2]);
+				m.setCreatedAt((Timestamp)obj[2]);
 				m.setEmmiter((Usuario)obj[3]);
 				m.setReceiver((Usuario)obj[4]);
+				m.setViewed((boolean)obj[5]);
 				messageList.add(m);
 			}
 		}

@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mx.nj.pet.model.Follow;
 import com.mx.nj.pet.model.Pagination;
 import com.mx.nj.pet.model.Publication;
-import com.mx.nj.pet.model.Usuario;
 import com.mx.nj.pet.service.FollowService;
 import com.mx.nj.pet.service.PublicationService;
 import com.mx.nj.pet.util.Util;

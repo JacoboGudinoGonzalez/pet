@@ -52,9 +52,6 @@ public class MessageController {
 					.add("error", "Envia los datos necesarios").build();
 			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
 		}else {
-			message.setEmmiter(Util.parseTokenToUser(authStringe));
-			message.setCreatedAt(Util.getDate());
-			message.setViewed(false);
 			messageService.addMessage(message);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
@@ -108,6 +105,7 @@ public class MessageController {
 				Pagination p = new Pagination();
 				p.setItem(list);
 				p.setPages((list.size()+itemsPerPage-1)/itemsPerPage);
+				p.setItemsPerPage(itemsPerPage);
 				p.setTotal(list.size());
 
 				json = writer.writeValueAsString(p);
@@ -163,6 +161,7 @@ public class MessageController {
 				Pagination p = new Pagination();
 				p.setItem(list);
 				p.setPages((messageList.size()+itemsPerPage-1)/itemsPerPage);
+				p.setItemsPerPage(itemsPerPage);
 				p.setTotal(messageList.size());
 
 				json = writer.writeValueAsString(p);

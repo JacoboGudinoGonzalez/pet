@@ -242,4 +242,38 @@ public class FollowController {
 			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();	
 		}
 	}
+
+	@GET
+	@Path("/getMyFollows/{param}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getMyFollows(@HeaderParam("authorization") String authStringe,@PathParam("param") boolean param){
+		if(!Util.parseToken(authStringe)){
+			JsonObject msj = Json.createObjectBuilder()
+					.add("error", "-1").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
+		}
+
+		List<Follow> myFollowsList = param==true?followService.getMyFollows(Util.parseTokenToUser(authStringe).getId()):followService.getMyFollowed(Util.parseTokenToUser(authStringe).getId());
+
+		if(myFollowsList.isEmpty()){
+			JsonObject msj = Json.createObjectBuilder()
+					.add("msj", "0").build();
+			return Response.status(Response.Status.OK).entity(msj.toString()).build();
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+		String json = null;
+		try {
+
+			final ObjectWriter writer = mapper.writer().withoutRootName();
+
+			json = writer.writeValueAsString(myFollowsList);
+
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return Response.status(Response.Status.OK).entity(json).build();
+	}
 }

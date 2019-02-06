@@ -1,6 +1,6 @@
 package com.mx.nj.pet.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +20,7 @@ public class Message {
 	
 	@Id
 	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	Integer id;
 	
 	@Column(name="text")
@@ -35,7 +35,7 @@ public class Message {
     Usuario receiver;
 	
 	@Column(name="created_at")
-	Date createdAt;
+	Timestamp createdAt;
 	
 	@Column(name="viewed")
 	boolean viewed;
@@ -44,7 +44,7 @@ public class Message {
 		super();
 	}
 
-	public Message(int id, String text, Usuario emmiter, Usuario receiver, Date createdAt, boolean viewed) {
+	public Message(int id, String text, Usuario emmiter, Usuario receiver, Timestamp createdAt, boolean viewed) {
 		super();
 		this.id = id;
 		this.text = text;
@@ -54,11 +54,11 @@ public class Message {
 		this.viewed = viewed;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -86,11 +86,11 @@ public class Message {
 		this.receiver = receiver;
 	}
 
-	public Date getCreatedAt() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 
