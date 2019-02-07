@@ -15,9 +15,9 @@ public interface MessageService {
 	
 	List<Message> getMessages(int userId);
 	
-	Message getMessageById(int id);
+	Message getMessage(int id);
 	
-	void deleteMyMessageById(int messageId, int userId);
+	void deleteMessage(int messageId, int userId);
 	
 	long getUnviewedMessages(int userId);
 	

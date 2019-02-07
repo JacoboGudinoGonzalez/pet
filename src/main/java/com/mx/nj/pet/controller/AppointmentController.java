@@ -23,38 +23,40 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.mx.nj.pet.model.Appointment;
 import com.mx.nj.pet.model.Message;
 import com.mx.nj.pet.model.Pagination;
-import com.mx.nj.pet.service.MessageService;
+import com.mx.nj.pet.service.AppointmentService;
 import com.mx.nj.pet.util.Util;
 
 @Component
-@Path("/messageController")
-public class MessageController {
+@Path("/appointmentController")
+public class AppointmentController {
 
-	@Autowired(required=true) MessageService messageService;
+	@Autowired(required=true) AppointmentService appointmentService;
 
 	@POST
-	@Path("/saveMessage")
+	@Path("/addAppointment")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response saveMessage(@HeaderParam("authorization") String authStringe, Message message){
+	public Response saveMessage(@HeaderParam("authorization") String authStringe, Appointment appointment){
 		if(!Util.parseToken(authStringe)){
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "No tienes permiso para obtener informacion").build();
 			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
 		}
-		if(message.getText()==null || message.getReceiver()==null) {
+		if(appointment.getService()==0 || appointment.getFromDate()==null || appointment.getToDate()==null 
+				|| appointment.getFromUser()==null || appointment.getToUser()==null) {
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "Envia los datos necesarios").build();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
+			return Response.status(Response.Status.BAD_REQUEST).entity(msj.toString()).build();
 		}else {
-			messageService.addMessage(message);
+			appointmentService.addAppointment(appointment);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 			String result = null;
 			try {
-				result = mapper.writeValueAsString(message);
+				result = mapper.writeValueAsString(appointment);
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
@@ -63,7 +65,7 @@ public class MessageController {
 	}
 
 	@GET
-	@Path("/myMessages/{pageParam}")
+	@Path("/myAppointment/{pageParam}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getReceivedMessages(@HeaderParam("authorization") String authStringe, @PathParam("pageParam") int pageParam){
@@ -73,7 +75,7 @@ public class MessageController {
 			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
 		}
 
-		List<Message> messageList = messageService.getMyMessages(Util.parseTokenToUser(authStringe).getId());
+		List<Appointment> appointmentList = appointmentService.getMyAppointments(Util.parseTokenToUser(authStringe).getId());
 
 		int page = 1;
 		int itemsPerPage = 4;
@@ -82,10 +84,10 @@ public class MessageController {
 			page = pageParam;
 		}
 
-		List<Message> list = new ArrayList(Util.partition(messageList, itemsPerPage));
+		List<Appointment> list = new ArrayList(Util.partition(appointmentList, itemsPerPage));
 		boolean continuar = false;
 		try {
-			list = (List<Message>) list.get(page-1);
+			list = (List<Appointment>) list.get(page-1);
 			continuar = true;
 		} catch (IndexOutOfBoundsException e) {
 			continuar = false;
@@ -113,13 +115,13 @@ public class MessageController {
 			return Response.status(Response.Status.OK).entity(json.toString()).build();
 		}else{
 			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "no existen mensajes para pagina: "+(page-1)).build();
+					.add("msj", "no existen citas para pagina: "+(page-1)).build();
 			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
 		}
 	}
 
 	@GET
-	@Path("/messages/{pageParam}")
+	@Path("/appointments/{pageParam}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getMessages(@HeaderParam("authorization") String authStringe, @PathParam("pageParam") int pageParam){
@@ -129,7 +131,7 @@ public class MessageController {
 			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
 		}
 
-		List<Message> messageList = messageService.getMessages(Util.parseTokenToUser(authStringe).getId());
+		List<Appointment> appointmentList = appointmentService.getAppointments(Util.parseTokenToUser(authStringe).getId());
 
 		int page = 1;
 		int itemsPerPage = 4;
@@ -138,10 +140,10 @@ public class MessageController {
 			page = pageParam;
 		}
 
-		List<Message> list = new ArrayList(Util.partition(messageList, itemsPerPage));
+		List<Appointment> list = new ArrayList(Util.partition(appointmentList, itemsPerPage));
 		boolean continuar = false;
 		try {
-			list = (List<Message>) list.get(page-1);
+			list = (List<Appointment>) list.get(page-1);
 			continuar = true;
 		} catch (IndexOutOfBoundsException e) {
 			continuar = false;
@@ -157,9 +159,9 @@ public class MessageController {
 
 				Pagination p = new Pagination();
 				p.setItem(list);
-				p.setPages((messageList.size()+itemsPerPage-1)/itemsPerPage);
+				p.setPages((appointmentList.size()+itemsPerPage-1)/itemsPerPage);
 				p.setItemsPerPage(itemsPerPage);
-				p.setTotal(messageList.size());
+				p.setTotal(appointmentList.size());
 
 				json = writer.writeValueAsString(p);
 
@@ -169,59 +171,13 @@ public class MessageController {
 			return Response.status(Response.Status.OK).entity(json.toString()).build();
 		}else{
 			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "no existen mensajes para pagina: "+(page-1)).build();
+					.add("msj", "no existen citas para pagina: "+(page-1)).build();
 			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
 		}
 	}
 
 	@GET
-	@Path("/unviewedMessages")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getUnviewedMessages(@HeaderParam("authorization") String authStringe){
-		if(!Util.parseToken(authStringe)){
-			JsonObject msj = Json.createObjectBuilder()
-					.add("error", "No tienes permiso para obtener informacion").build();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
-		}
-		long unviewed = messageService.getUnviewedMessages(Util.parseTokenToUser(authStringe).getId());
-
-		if(unviewed==0){
-			JsonObject msj = Json.createObjectBuilder()
-					.add("error", "No existen mensajes sin ver").build();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
-		}else {
-			JsonObject msj = Json.createObjectBuilder()
-					.add("unviewed", unviewed).build();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
-		}
-	}
-	
-	@GET
-	@Path("/setViewedMessages")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response setViewedMessages(@HeaderParam("authorization") String authStringe){
-		if(!Util.parseToken(authStringe)){
-			JsonObject msj = Json.createObjectBuilder()
-					.add("error", "No tienes permiso para obtener informacion").build();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
-		}
-		int unviewed = messageService.setViewedMessages(Util.parseTokenToUser(authStringe).getId());
-
-		if(unviewed==0){
-			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "No existen mensajes sin ver").build();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
-		}else {
-			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "mensajes marcados como vistos: "+unviewed).build();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
-		}
-	}
-
-	@GET
-	@Path("/message/{id}")
+	@Path("/appointment/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getMessage(@HeaderParam("authorization") String authStringe, @PathParam("id") int id){
@@ -233,34 +189,34 @@ public class MessageController {
 
 		if(id!=0){
 
-			Message message = messageService.getMessage(id);
+			Appointment appointment = appointmentService.getAppointment(id);
 
-			if(message!=null){
+			if(appointment!=null){
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 				String result = null;
 				try {
 					final ObjectWriter writer = mapper.writer().withRootName("message");
-					result = writer.writeValueAsString(message);
+					result = writer.writeValueAsString(appointment);
 				} catch (JsonProcessingException e) {
 					e.printStackTrace();
 				}
 				return Response.status(Response.Status.OK).entity(result).build();
 			}else{
 				JsonObject msj = Json.createObjectBuilder()
-						.add("msj", "no existen mensaje").build();
+						.add("msj", "no existen cita").build();
 				return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
 			}
 
 		}else{
 			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "no existe mensaj para id 0").build();
+					.add("msj", "no existe cita para id 0").build();
 			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
 		}
 	}
 
 	@DELETE
-	@Path("/message/{id}")
+	@Path("/appointment/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMessage(@HeaderParam("authorization") String authStringe, @PathParam("id") int id){
@@ -270,10 +226,10 @@ public class MessageController {
 			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
 		}
 
-		messageService.deleteMessage(id, Util.parseTokenToUser(authStringe).getId());
+		appointmentService.deleteAppointment(id, Util.parseTokenToUser(authStringe).getId());
 
 		JsonObject msj = Json.createObjectBuilder()
-				.add("msj", "no existen mensajes").build();
+				.add("msj", "no existen citas").build();
 		return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
 	}
 

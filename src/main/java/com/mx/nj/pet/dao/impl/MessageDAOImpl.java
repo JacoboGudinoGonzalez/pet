@@ -84,12 +84,12 @@ public class MessageDAOImpl implements MessageDAO {
 	}
 
 	@Override
-	public Message getMessageById(int id) {
+	public Message getMessage(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
 		return (Message) session.get(Message.class, id);
 	}
 	
-	public void deleteMyMessageById(int messageId, int userId) {
+	public void deleteMessage(int messageId, int userId) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query q = session.createQuery("delete Message p where p.id =:messageId AND usuario =:userId")
 				.setParameter("messageId", messageId).setParameter("userId", userId);

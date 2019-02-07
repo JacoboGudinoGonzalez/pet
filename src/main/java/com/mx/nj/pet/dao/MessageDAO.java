@@ -10,9 +10,9 @@ public interface MessageDAO {
 	
 	List<Message> getMyMessages(int userId);
 	
-	Message getMessageById(int id);
+	Message getMessage(int id);
 	
-	void deleteMyMessageById(int messageId, int userId);
+	void deleteMessage(int messageId, int userId);
 
 	List<Message> getMessages(int userId);
 	

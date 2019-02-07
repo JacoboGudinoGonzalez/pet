@@ -31,13 +31,13 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Transactional
-	public Message getMessageById(int id) {
-		return messageDao.getMessageById(id);
+	public Message getMessage(int id) {
+		return messageDao.getMessage(id);
 	}
 	
 	@Transactional
-	public void deleteMyMessageById(int messageId, int userId) {
-		messageDao.deleteMyMessageById(messageId, userId);
+	public void deleteMessage(int messageId, int userId) {
+		messageDao.deleteMessage(messageId, userId);
 	}
 	
 	@Transactional
