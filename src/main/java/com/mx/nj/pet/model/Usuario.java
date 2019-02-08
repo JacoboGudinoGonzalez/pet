@@ -48,6 +48,9 @@ public class Usuario {
 	@Column(name="description")
 	String description;
 	
+	@Column(name="address")
+	String address;
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usuario")
     private Set<ServicePet> servicePet;
 	
@@ -74,7 +77,7 @@ public class Usuario {
 	}
 	
 	public Usuario(Integer id, String name, String email, String tel, String password, String type, Boolean getToken, 
-			String image, int rating, String description) {
+			String image, int rating, String description, String address) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -86,6 +89,7 @@ public class Usuario {
 		this.image = image;
 		this.rating = rating;
 		this.description = description;
+		this.address = address;
 	}
 	
 	public Integer getId() {
@@ -147,6 +151,12 @@ public class Usuario {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}	
 }
 

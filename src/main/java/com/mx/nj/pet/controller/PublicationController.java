@@ -248,8 +248,8 @@ public class PublicationController {
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
-		String uploadedFileLocation = "C:/Users/jgudiño/Documents/workspace/petProject/backend/img/"
-//		String uploadedFileLocation = "/Users/JACOBO/Documents/images/"
+//		String uploadedFileLocation = "C:/Users/jgudiï¿½o/Documents/workspace/petProject/backend/img/"
+		String uploadedFileLocation = "/Users/JACOBO/Documents/images/"
 				+ fileDetail.getFileName();
 
 		Publication issetPublication = publicationService.getPublication(id);

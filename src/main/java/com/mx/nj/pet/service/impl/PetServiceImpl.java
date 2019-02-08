@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mx.nj.pet.dao.PetServiceDAO;
 import com.mx.nj.pet.model.ServicePet;
-import com.mx.nj.pet.service.PetServiceService;
+import com.mx.nj.pet.service.PetService;
 
 @Service("petServiceService")
-public class PetServiceServiceImpl implements PetServiceService {
+public class PetServiceImpl implements PetService {
 	
 	@Autowired PetServiceDAO petServiceDao;
 

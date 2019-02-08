@@ -11,7 +11,7 @@
 	<beans:bean id="usuarioService" class="com.mx.nj.pet.service.impl.UsuarioServiceImpl">
 	</beans:bean>
 	
-	<beans:bean id="petServiceService" class="com.mx.nj.pet.service.impl.PetServiceServiceImpl">
+	<beans:bean id="petServiceService" class="com.mx.nj.pet.service.impl.PetServiceImpl">
 	</beans:bean>
 	
 	<beans:bean id="followService" class="com.mx.nj.pet.service.impl.FollowServiceImpl">
@@ -21,6 +21,12 @@
 	</beans:bean>
 	
 	<beans:bean id="messageService" class="com.mx.nj.pet.service.impl.MessageServiceImpl">
+	</beans:bean>
+	
+	<beans:bean id="appointmentService" class="com.mx.nj.pet.service.impl.AppointmentServiceImpl">
+	</beans:bean>
+	
+	<beans:bean id="petService" class="com.mx.nj.pet.service.impl.PetServiceImpl">
 	</beans:bean>
 
 	<annotation-driven />
@@ -53,6 +59,8 @@
 				<beans:value>com.mx.nj.pet.model.Follow</beans:value>
 				<beans:value>com.mx.nj.pet.model.Publication</beans:value>
 				<beans:value>com.mx.nj.pet.model.Message</beans:value>
+				<beans:value>com.mx.nj.pet.model.Appointment</beans:value>
+				<beans:value>com.mx.nj.pet.model.Pet</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">

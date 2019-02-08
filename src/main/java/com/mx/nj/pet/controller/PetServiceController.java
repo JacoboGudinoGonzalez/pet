@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 
 import com.mx.nj.pet.model.ServicePet;
 import com.mx.nj.pet.model.Usuario;
-import com.mx.nj.pet.service.PetServiceService;
+import com.mx.nj.pet.service.PetService;
 
 @Component
 @Path("/petServiceController")
 public class PetServiceController {
 	
-	@Autowired(required=true) PetServiceService petServiceService;
+	@Autowired(required=true) PetService petServiceService;
 
 	@POST
 	@Path("/addPetService/{idUserFrom}/{idUserTo}")

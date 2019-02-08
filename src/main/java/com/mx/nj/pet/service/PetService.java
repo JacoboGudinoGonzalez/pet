@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.mx.nj.pet.model.ServicePet;
 
 @Service("petServiceService")
-public interface PetServiceService {
+public interface PetService {
 	
 	void addPetService(ServicePet sp);
 }
