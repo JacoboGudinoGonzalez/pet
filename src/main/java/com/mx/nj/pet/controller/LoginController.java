@@ -1,11 +1,14 @@
 package com.mx.nj.pet.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.json.Json;
@@ -55,6 +58,10 @@ public class LoginController {
 	@Autowired(required=true) UsuarioService usuarioService;
 	@Autowired(required=true) FollowService followService;
 	@Autowired(required=true) PublicationService publicationService;
+	
+	String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+	String appConfigPath = rootPath + "config.properties";	
+	Properties appProps = new Properties();
 
 	private String createToken(Usuario user){
 		if((user.getName()!=null && user.getName()!="") && (user.getPassword()!=null && user.getPassword()!="") 
@@ -117,10 +124,11 @@ public class LoginController {
 	@Path("/loginUser")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response login(Usuario user){
+	public Response login(Usuario user) throws FileNotFoundException, IOException{
 		if((user.getEmail()!=null && user.getEmail()!="") && (user.getPassword()!=null && user.getPassword()!="")){
 			Usuario issetUser = usuarioService.getUserByEmail(user.getEmail());
 			if(issetUser!=null){
+				
 				if(Util.verifyAndUpdateHash(user.getPassword(), issetUser.getPassword(), Util.update)){
 					ObjectMapper mapper = new ObjectMapper();
 					mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
@@ -199,10 +207,14 @@ public class LoginController {
 			@PathParam("id") int id,
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
-
-		//String uploadedFileLocation = "C:/Users/jgudi�o/Documents/workspace/petProject/backend/img/"
-		String uploadedFileLocation = "/Users/JACOBO/Documents/images/"
-				+ fileDetail.getFileName();
+		
+		String uploadedFileLocation = null;
+		try {
+			appProps.load(new FileInputStream(appConfigPath));
+			uploadedFileLocation = appProps.getProperty("dir")+ fileDetail.getFileName();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		Usuario issetUser = usuarioService.getUserById(id);
 		if(issetUser!=null){
@@ -227,8 +239,17 @@ public class LoginController {
 	@Path("/getImageFile/{imageFile}")
 	@Produces("image/png")
 	public Response getImageFile(@PathParam("imageFile") String imageFile){
-//		File file = new File("C:/Users/jgudi�o/Documents/workspace/petProject/backend/img/"+imageFile);
-		File file = new File("/Users/JACOBO/Documents/images/"+imageFile);
+		
+		String uploadedFileLocation = null;
+		try {
+			appProps.load(new FileInputStream(appConfigPath));
+			uploadedFileLocation = appProps.getProperty("dir")+imageFile;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		File file = new File(uploadedFileLocation);
+		
 		if(file.exists() && !file.isDirectory()) { 
 			ResponseBuilder response = Response.ok((Object) file);
 			response.header("Content-Disposition",
@@ -236,8 +257,7 @@ public class LoginController {
 			return response.build();
 		}else {
 			imageFile = "default.jpg";
-//			file = new File("C:/Users/jgudi�o/Documents/workspace/petProject/backend/img/"+imageFile);
-			file = new File("/Users/JACOBO/Documents/images/"+imageFile);
+			file = new File(uploadedFileLocation);
 			ResponseBuilder response = Response.ok((Object) file);
 			response.header("Content-Disposition",
 					"attachment; filename=image_from_server.png");

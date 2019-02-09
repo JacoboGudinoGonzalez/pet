@@ -1,7 +1,5 @@
 package com.mx.nj.pet.dao.impl;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -10,12 +8,11 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.mx.nj.pet.dao.AppointmentDAO;
-import com.mx.nj.pet.model.Appointment;
-import com.mx.nj.pet.model.Usuario;
+import com.mx.nj.pet.dao.PetDAO;
+import com.mx.nj.pet.model.Pet;
 
 @Repository
-public class AppointmentDAOImpl implements AppointmentDAO {
+public class PetDAOImpl implements PetDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -25,16 +22,16 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 	}
 
 	@Override
-	public Appointment addAppointment(Appointment message) {
+	public Pet addPet(Pet pet) {
 		Session session = this.sessionFactory.getCurrentSession();
-		session.persist(message);
-		return message;
+		session.persist(pet);
+		return pet;
 	}
 
 	@Override
-	public List<Appointment> getMyAppointments(int fromUser) {
+	public List<Pet> getMyPets(int fromUser) {
 
-		Session session = this.sessionFactory.getCurrentSession();	
+		/*Session session = this.sessionFactory.getCurrentSession();	
 
 		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.status FROM Appointment a WHERE a.fromUser =:fromUser ORDER BY a.fromDate DESC";
 		Query query = session.createQuery(hql);
@@ -53,14 +50,14 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 				a.setStatus((Integer)obj[6]);
 				appointmentList.add(a);
 			}
-		}
-		return appointmentList;
+		}*/
+		return null;
 	}
 	
 	@Override
-	public List<Appointment> getAppointments(int toUser) {
+	public List<Pet> getPets(int toUser) {
 
-		Session session = this.sessionFactory.getCurrentSession();	
+		/*Session session = this.sessionFactory.getCurrentSession();	
 
 		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.status FROM Appointment a WHERE a.toUser =:toUser ORDER BY a.fromDate DESC";
 		Query query = session.createQuery(hql);
@@ -79,20 +76,20 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 				a.setStatus((Integer)obj[6]);
 				appointmentList.add(a);
 			}
-		}
-		return appointmentList;
+		}*/
+		return null;
 	}
 
 	@Override
-	public Appointment getAppointment(int id) {
+	public Pet getPet(int id) {
 		Session session = this.sessionFactory.getCurrentSession();
-		return (Appointment) session.get(Appointment.class, id);
+		return (Pet) session.get(Pet.class, id);
 	}
 	
-	public void deleteAppointment(int appointmentId, int fromUser) {
-		Session session = this.sessionFactory.getCurrentSession();
+	public void deletePet(int fromUser) {
+		/*Session session = this.sessionFactory.getCurrentSession();
 		Query q = session.createQuery("delete Appointment a where p.id =:appointmentId AND fromUser =:fromUser")
 				.setParameter("appointmentId", appointmentId).setParameter("fromUser", fromUser);
-		q.executeUpdate();
+		q.executeUpdate();*/
 	}
 }

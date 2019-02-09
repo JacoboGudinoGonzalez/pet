@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
@@ -41,11 +42,18 @@ public class Appointment {
 	@JoinColumn(name="to_user", nullable=false)
 	Usuario toUser;
 	
+	@Column(name="status")
+	int status;
+	
+	@OneToOne
+	@JoinColumn(name="pet", nullable=false)
+	Pet pet;
+	
 	public Appointment() {
 		super();
 	}
 
-	public Appointment(Integer id, int service, Date fromDate, Date toDate, Usuario fromUser, Usuario toUser) {
+	public Appointment(Integer id, int service, Date fromDate, Date toDate, Usuario fromUser, Usuario toUser, int status, Pet pet) {
 		super();
 		this.id = id;
 		this.service = service;
@@ -53,9 +61,8 @@ public class Appointment {
 		this.toDate = toDate;
 		this.fromUser = fromUser;
 		this.toUser = toUser;
+		this.status = status;
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -103,6 +110,22 @@ public class Appointment {
 
 	public void setToUser(Usuario toUser) {
 		this.toUser = toUser;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public Pet getPet() {
+		return pet;
+	}
+
+	public void setPet(Pet pet) {
+		this.pet = pet;
 	}
 
 }

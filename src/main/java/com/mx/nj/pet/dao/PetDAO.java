@@ -2,7 +2,6 @@ package com.mx.nj.pet.dao;
 
 import java.util.List;
 
-import com.mx.nj.pet.model.Appointment;
 import com.mx.nj.pet.model.Pet;
 
 public interface PetDAO {
@@ -11,7 +10,7 @@ public interface PetDAO {
 	
 	List<Pet> getMyPets(int fromUser);
 	
-	Pet getAppointment(int id);
+	Pet getPet(int id);
 	
 	void deletePet(int petId);
 

@@ -24,9 +24,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mx.nj.pet.model.Appointment;
-import com.mx.nj.pet.model.Message;
 import com.mx.nj.pet.model.Pagination;
 import com.mx.nj.pet.service.AppointmentService;
+import com.mx.nj.pet.service.PetService;
 import com.mx.nj.pet.util.Util;
 
 @Component
@@ -34,23 +34,28 @@ import com.mx.nj.pet.util.Util;
 public class AppointmentController {
 
 	@Autowired(required=true) AppointmentService appointmentService;
-
+	@Autowired(required=true) PetService petService;
+	
 	@POST
 	@Path("/addAppointment")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response saveMessage(@HeaderParam("authorization") String authStringe, Appointment appointment){
+	public Response saveAppointment(@HeaderParam("authorization") String authStringe, Appointment appointment){
 		if(!Util.parseToken(authStringe)){
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "No tienes permiso para obtener informacion").build();
 			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
 		}
 		if(appointment.getService()==0 || appointment.getFromDate()==null || appointment.getToDate()==null 
-				|| appointment.getFromUser()==null || appointment.getToUser()==null) {
+				|| appointment.getFromUser()==null || appointment.getToUser()==null
+				|| appointment.getPet().getOwner()==null || appointment.getPet().getGender()==0
+				|| appointment.getPet().getType()==0 || appointment.getPet().getSize()==0 
+				|| appointment.getPet().getYears()==0) {
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "Envia los datos necesarios").build();
 			return Response.status(Response.Status.BAD_REQUEST).entity(msj.toString()).build();
 		}else {
+			appointment.getPet().setId(petService.addPet(appointment.getPet()).getId());
 			appointmentService.addAppointment(appointment);
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);

@@ -36,7 +36,7 @@ public class PetServiceController {
 			user.setId(idUserFrom);
 			sp.setUsuario(user);
 			sp.setIdUserTo(idTUsero);
-			petServiceService.addPetService(sp);
+			//petServiceService.addPetService(sp);
 			JsonObject msj = Json.createObjectBuilder()
 					.add("msj", "se ha generado la reservación exitosamente").build();
 			return Response.status(Response.Status.OK).entity(msj.toString()).build();

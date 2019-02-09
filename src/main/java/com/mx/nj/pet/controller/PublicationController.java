@@ -1,8 +1,11 @@
 package com.mx.nj.pet.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -38,8 +41,11 @@ import com.sun.jersey.multipart.FormDataParam;
 public class PublicationController {
 
 	@Autowired(required=true) PublicationService publicationService;
-
 	@Autowired(required=true) FollowService followService;
+	
+	String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+	String appConfigPath = rootPath + "config.properties";	
+	Properties appProps = new Properties();
 
 	@POST
 	@Path("/savePublication")
@@ -248,9 +254,13 @@ public class PublicationController {
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
-//		String uploadedFileLocation = "C:/Users/jgudi�o/Documents/workspace/petProject/backend/img/"
-		String uploadedFileLocation = "/Users/JACOBO/Documents/images/"
-				+ fileDetail.getFileName();
+		String uploadedFileLocation = null;
+		try {
+			appProps.load(new FileInputStream(appConfigPath));
+			uploadedFileLocation = appProps.getProperty("dir")+ fileDetail.getFileName();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		Publication issetPublication = publicationService.getPublication(id);
 		if(issetPublication!=null){

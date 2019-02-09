@@ -1,11 +1,21 @@
 package com.mx.nj.pet.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
-import com.mx.nj.pet.model.ServicePet;
+import com.mx.nj.pet.model.Pet;
 
-@Service("petServiceService")
+@Service("petService")
 public interface PetService {
 	
-	void addPetService(ServicePet sp);
+	Pet addPet(Pet pet);
+	
+	List<Pet> getMyPets(int fromUser);
+	
+	List<Pet> getPets(int toUser);
+	
+	Pet getPet(int id);
+	
+	void deletePet(int fromUser);
 }
