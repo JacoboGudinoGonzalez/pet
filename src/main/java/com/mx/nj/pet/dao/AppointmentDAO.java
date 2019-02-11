@@ -15,5 +15,7 @@ public interface AppointmentDAO {
 	void deleteAppointment(int appointmentId, int fromUser);
 
 	List<Appointment> getAppointments(int toUser);
+
+	void changeAppointmentStatus(int appointmentId, int status);
 	
 }

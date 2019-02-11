@@ -91,10 +91,19 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 		return (Appointment) session.get(Appointment.class, id);
 	}
 	
+	@Override
 	public void deleteAppointment(int appointmentId, int fromUser) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Query q = session.createQuery("delete Appointment a where p.id =:appointmentId AND fromUser =:fromUser")
+		Query q = session.createQuery("DELETE Appointment a where a.id =:appointmentId AND fromUser =:fromUser")
 				.setParameter("appointmentId", appointmentId).setParameter("fromUser", fromUser);
+		q.executeUpdate();
+	}
+	
+	@Override
+	public void changeAppointmentStatus(int appointmentId, int status) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Query q = session.createQuery("UPDATE Appointment a SET a.status=:status WHERE a.id =:appointmentId")
+				.setParameter("appointmentId", appointmentId).setParameter("status", status);
 		q.executeUpdate();
 	}
 }

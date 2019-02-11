@@ -39,4 +39,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public void deleteAppointment(int appointmentId, int fromUser) {
 		appointmentDao.deleteAppointment(appointmentId, fromUser);
 	}
+	
+	@Transactional
+	public void changeAppointmentStatus(int appointmentId, int status) {
+		appointmentDao.changeAppointmentStatus(appointmentId, status);
+	}
 }

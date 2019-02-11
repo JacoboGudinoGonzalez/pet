@@ -10,6 +10,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -55,6 +56,7 @@ public class AppointmentController {
 					.add("error", "Envia los datos necesarios").build();
 			return Response.status(Response.Status.BAD_REQUEST).entity(msj.toString()).build();
 		}else {
+			appointment.setStatus(1);
 			appointment.getPet().setId(petService.addPet(appointment.getPet()).getId());
 			appointmentService.addAppointment(appointment);
 			ObjectMapper mapper = new ObjectMapper();
@@ -73,7 +75,7 @@ public class AppointmentController {
 	@Path("/myAppointments/{pageParam}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getReceivedMessages(@HeaderParam("authorization") String authStringe, @PathParam("pageParam") int pageParam){
+	public Response getReceivedAppointments(@HeaderParam("authorization") String authStringe, @PathParam("pageParam") int pageParam){
 		if(!Util.parseToken(authStringe)){
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "No tienes permiso para obtener informacion").build();
@@ -129,7 +131,7 @@ public class AppointmentController {
 	@Path("/appointments/{pageParam}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getMessages(@HeaderParam("authorization") String authStringe, @PathParam("pageParam") int pageParam){
+	public Response getAppointments(@HeaderParam("authorization") String authStringe, @PathParam("pageParam") int pageParam){
 		if(!Util.parseToken(authStringe)){
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "No tienes permiso para obtener informacion").build();
@@ -185,7 +187,7 @@ public class AppointmentController {
 	@Path("/appointment/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getMessage(@HeaderParam("authorization") String authStringe, @PathParam("id") int id){
+	public Response getAppointment(@HeaderParam("authorization") String authStringe, @PathParam("id") int id){
 		if(!Util.parseToken(authStringe)){
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "-1").build();
@@ -224,18 +226,36 @@ public class AppointmentController {
 	@Path("/appointment/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteMessage(@HeaderParam("authorization") String authStringe, @PathParam("id") int id){
+	public Response deleteAppointment(@HeaderParam("authorization") String authStringe, @PathParam("id") int id){
 		if(!Util.parseToken(authStringe)){
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "-1").build();
 			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
 		}
 
-		appointmentService.deleteAppointment(id, Util.parseTokenToUser(authStringe).getId());
+		appointmentService.changeAppointmentStatus(id, 0);
 
 		JsonObject msj = Json.createObjectBuilder()
-				.add("msj", "no existen citas").build();
-		return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+				.add("msj", "0").build();
+		return Response.status(Response.Status.OK).entity(msj.toString()).build();
+	}
+	
+	@PUT
+	@Path("/appointment/{id}/{status}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteMessage(@HeaderParam("authorization") String authStringe, @PathParam("id") int id, @PathParam("status") int status){
+		if(!Util.parseToken(authStringe)){
+			JsonObject msj = Json.createObjectBuilder()
+					.add("error", "-1").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
+		}
+
+		appointmentService.changeAppointmentStatus(id, status);
+
+		JsonObject msj = Json.createObjectBuilder()
+				.add("msj", "0").build();
+		return Response.status(Response.Status.OK).entity(msj.toString()).build();
 	}
 
 }

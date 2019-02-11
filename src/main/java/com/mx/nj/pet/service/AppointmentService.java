@@ -19,4 +19,6 @@ public interface AppointmentService {
 	
 	void deleteAppointment(int appointmentId, int fromUser);
 	
+	void changeAppointmentStatus(int appointmentId, int status);
+	
 }
