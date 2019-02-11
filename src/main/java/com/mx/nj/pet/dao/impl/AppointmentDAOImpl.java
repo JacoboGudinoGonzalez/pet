@@ -38,7 +38,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
 		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.status FROM Appointment a WHERE a.fromUser =:fromUser ORDER BY a.fromDate DESC";
 		Query query = session.createQuery(hql);
-		query.setParameter("fromUser", fromUser);
+		Usuario usuario = (Usuario) session.get(Usuario.class, fromUser);
+		query.setParameter("fromUser", usuario);
 		List<Object[]> objectList = query.list();
 		List<Appointment> appointmentList = new ArrayList<Appointment>();
 		if(objectList.size()!=0){
@@ -64,7 +65,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
 		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.status FROM Appointment a WHERE a.toUser =:toUser ORDER BY a.fromDate DESC";
 		Query query = session.createQuery(hql);
-		query.setParameter("toUser", toUser);
+		Usuario usuario = (Usuario) session.get(Usuario.class, toUser);
+		query.setParameter("toUser", usuario);
 		List<Object[]> objectList = query.list();
 		List<Appointment> appointmentList = new ArrayList<Appointment>();
 		if(objectList.size()!=0){

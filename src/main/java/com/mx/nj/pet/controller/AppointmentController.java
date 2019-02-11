@@ -70,7 +70,7 @@ public class AppointmentController {
 	}
 
 	@GET
-	@Path("/myAppointment/{pageParam}")
+	@Path("/myAppointments/{pageParam}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response getReceivedMessages(@HeaderParam("authorization") String authStringe, @PathParam("pageParam") int pageParam){
