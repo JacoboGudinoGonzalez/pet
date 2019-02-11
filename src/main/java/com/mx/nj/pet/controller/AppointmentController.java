@@ -120,8 +120,8 @@ public class AppointmentController {
 			return Response.status(Response.Status.OK).entity(json.toString()).build();
 		}else{
 			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "no existen citas para pagina: "+(page-1)).build();
-			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+					.add("msj", "0").build();
+			return Response.status(Response.Status.OK).entity(msj.toString()).build();
 		}
 	}
 
@@ -176,8 +176,8 @@ public class AppointmentController {
 			return Response.status(Response.Status.OK).entity(json.toString()).build();
 		}else{
 			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "no existen citas para pagina: "+(page-1)).build();
-			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+					.add("msj", "0").build();
+			return Response.status(Response.Status.OK).entity(msj.toString()).build();
 		}
 	}
 
