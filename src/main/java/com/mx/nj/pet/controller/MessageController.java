@@ -113,8 +113,8 @@ public class MessageController {
 			return Response.status(Response.Status.OK).entity(json.toString()).build();
 		}else{
 			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "no existen mensajes para pagina: "+(page-1)).build();
-			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+					.add("msj", "0: "+(page-1)).build();
+			return Response.status(Response.Status.OK).entity(msj.toString()).build();
 		}
 	}
 
@@ -169,8 +169,8 @@ public class MessageController {
 			return Response.status(Response.Status.OK).entity(json.toString()).build();
 		}else{
 			JsonObject msj = Json.createObjectBuilder()
-					.add("msj", "no existen mensajes para pagina: "+(page-1)).build();
-			return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+					.add("msj", "0"+(page-1)).build();
+			return Response.status(Response.Status.OK).entity(msj.toString()).build();
 		}
 	}
 
