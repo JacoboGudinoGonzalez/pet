@@ -102,6 +102,7 @@ public class LoginController {
 				newUser.setPassword(Util.hash(user.getPassword()));
 				newUser.setType(user.getType());
 				newUser.setTel(user.getTel());
+				newUser.setAddress(user.getAddress());
 				usuarioService.addUsuario(newUser);
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
