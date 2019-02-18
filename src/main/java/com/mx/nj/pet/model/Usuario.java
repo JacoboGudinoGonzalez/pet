@@ -51,6 +51,9 @@ public class Usuario {
 	@Column(name="address")
 	String address;
 	
+	@Column(name="coordinates")
+	String coordinates;
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usuario")
     private Set<ServicePet> servicePet;
 	
@@ -77,7 +80,7 @@ public class Usuario {
 	}
 	
 	public Usuario(Integer id, String name, String email, String tel, String password, String type, Boolean getToken, 
-			String image, int rating, String description, String address) {
+			String image, int rating, String description, String address, String coordinates) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -90,6 +93,7 @@ public class Usuario {
 		this.rating = rating;
 		this.description = description;
 		this.address = address;
+		this.coordinates = coordinates;
 	}
 	
 	public Integer getId() {
@@ -157,6 +161,12 @@ public class Usuario {
 	}
 	public void setAddress(String address) {
 		this.address = address;
-	}	
+	}
+	public String getCoordinates() {
+		return coordinates;
+	}
+	public void setCoordinates(String coordinates) {
+		this.coordinates = coordinates;
+	}
 }
 

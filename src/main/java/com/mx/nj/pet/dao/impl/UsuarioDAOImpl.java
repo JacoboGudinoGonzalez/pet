@@ -27,7 +27,7 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 	@Override
 	public List<Usuario> getAllUsers(String type) {
 		Session session = this.sessionFactory.getCurrentSession();
-		Query query = session.createQuery("select u.id, u.name, u.type, u.image, u.email, u.tel, u.rating, u.description, u.address"
+		Query query = session.createQuery("select u.id, u.name, u.type, u.image, u.email, u.tel, u.rating, u.description, u.coordinates, u.address"
 				+ " from Usuario u where u.type != :type ")
 				.setParameter("type", type);	
 
@@ -44,7 +44,8 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 				u.setTel((String)obj[5]);
 				u.setRating((Integer)obj[6]);
 				u.setDescription((String)obj[7]);
-				u.setAddress((String)obj[8]);
+				u.setCoordinates((String)obj[8]);
+				u.setAddress((String)obj[9]);
 				userList.add(u);
 			}
 		}

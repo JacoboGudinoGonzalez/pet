@@ -53,8 +53,8 @@ public class AppointmentController {
 				|| appointment.getPet().getType()==0 || appointment.getPet().getSize()==0 
 				|| appointment.getPet().getYears()==0) {
 			JsonObject msj = Json.createObjectBuilder()
-					.add("error", "Envia los datos necesarios").build();
-			return Response.status(Response.Status.BAD_REQUEST).entity(msj.toString()).build();
+					.add("msj", "0").build();
+			return Response.status(Response.Status.OK).entity(msj.toString()).build();
 		}else {
 			appointment.setStatus(1);
 			appointment.getPet().setId(petService.addPet(appointment.getPet()).getId());
