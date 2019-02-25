@@ -23,18 +23,18 @@ import io.jsonwebtoken.Jwts;
 public class Util {
 
 	static UpdatableBCrypt oldHasher = new UpdatableBCrypt(7);
-	
+
 	static String[] mutableHash = new String[1];
 	public static Function<String, Boolean> update = hash -> { mutableHash[0] = hash; return true; };
 
 	public static String hash(String password) {
-	    return oldHasher.hash(password);
+		return oldHasher.hash(password);
 	}
 
 	public static boolean verifyAndUpdateHash(String password, String hash, Function<String, Boolean> updateFunc) {
-	    return oldHasher.verifyAndUpdateHash(password, hash, updateFunc);
+		return oldHasher.verifyAndUpdateHash(password, hash, updateFunc);
 	}
-	
+
 	public static Boolean parseToken(String token) {
 		try {
 			String KEY = "token_petNJ";
@@ -55,7 +55,7 @@ public class Util {
 			return false;
 		}
 	}
-	
+
 	public static Usuario parseTokenToUser(String token) {
 		Usuario u = null;
 		try {
@@ -78,38 +78,53 @@ public class Util {
 			return u;
 		}
 	}
-	
-	public static  <T> Collection<List<T>> partition(List<T> list, int size) {
-        final AtomicInteger counter = new AtomicInteger(0);
 
-        return list.stream()
-                .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / size))
-                .values();
-    }
-	
+	public static  <T> Collection<List<T>> partition(List<T> list, int size) {
+		final AtomicInteger counter = new AtomicInteger(0);
+
+		return list.stream()
+				.collect(Collectors.groupingBy(it -> counter.getAndIncrement() / size))
+				.values();
+	}
+
 	public static Date getDate() {
 		return new java.sql.Date(Calendar.getInstance().getTime().getTime());
 	}
-	
+
 	// save uploaded file to new location
 	public static void writeToFile(InputStream uploadedInputStream,
-				String uploadedFileLocation) {
+			String uploadedFileLocation) {
 
-			try {
-				OutputStream out = new FileOutputStream(new File(
-						uploadedFileLocation));
-				int read = 0;
-				byte[] bytes = new byte[1024];
+		try {
+			OutputStream out = new FileOutputStream(new File(
+					uploadedFileLocation));
+			int read = 0;
+			byte[] bytes = new byte[1024];
 
-				out = new FileOutputStream(new File(uploadedFileLocation));
-				while ((read = uploadedInputStream.read(bytes)) != -1) {
-					out.write(bytes, 0, read);
-				}
-				out.flush();
-				out.close();
-			} catch (IOException e) {
-
-				e.printStackTrace();
+			out = new FileOutputStream(new File(uploadedFileLocation));
+			while ((read = uploadedInputStream.read(bytes)) != -1) {
+				out.write(bytes, 0, read);
 			}
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+
+			e.printStackTrace();
 		}
+	}
+	
+	public static double distance(double lat1, double lon1, double lat2,   double lon2) {
+		if ((lat1 == lat2) && (lon1 == lon2)) {
+			return 0;
+		}
+		else {
+			double theta = lon1 - lon2;
+			double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+			dist = Math.acos(dist);
+			dist = Math.toDegrees(dist);
+			dist = dist * 60 * 1.1515;
+			dist = dist * 1.609344;
+			return (dist);
+		}
+	}
 }

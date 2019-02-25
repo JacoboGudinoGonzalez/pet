@@ -44,4 +44,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public void changeAppointmentStatus(int appointmentId, int status) {
 		appointmentDao.changeAppointmentStatus(appointmentId, status);
 	}
+	
+	@Transactional
+	public void changeAppointmentReview(int appointmentId, int rating, String review) {
+		appointmentDao.changeAppointmentReview(appointmentId, rating, review);
+	}
 }

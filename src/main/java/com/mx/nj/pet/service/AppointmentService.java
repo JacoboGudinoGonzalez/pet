@@ -21,4 +21,6 @@ public interface AppointmentService {
 	
 	void changeAppointmentStatus(int appointmentId, int status);
 	
+	void changeAppointmentReview(int appointmentId, int rating, String review);
+	
 }

@@ -50,7 +50,6 @@ import com.sun.jersey.multipart.FormDataParam;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @Component
 @Path("/controller")
 public class LoginController {
@@ -258,6 +257,7 @@ public class LoginController {
 			return response.build();
 		}else {
 			imageFile = "default.jpg";
+			uploadedFileLocation = appProps.getProperty("dir")+imageFile;
 			file = new File(uploadedFileLocation);
 			ResponseBuilder response = Response.ok((Object) file);
 			response.header("Content-Disposition",
@@ -280,6 +280,71 @@ public class LoginController {
 		if(type!=null){
 
 			List<Usuario> userList = usuarioService.getAllUsers(type);
+			int itemsPerPage = 5;
+			int page = 1;
+			if(pageParam!=0) {
+				page = pageParam;
+			}
+			List<Usuario> list = new ArrayList(Util.partition(userList, itemsPerPage));
+			boolean continuar = false;
+			try {
+				list = (List<Usuario>) list.get(page-1);
+				continuar = true;
+			} catch (IndexOutOfBoundsException e) {
+				continuar = false;
+			}
+
+			if(continuar){
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+				String json = null;
+				try {
+
+					final ObjectWriter writer = mapper.writer().withoutRootName();
+
+					FollowList f = new FollowList();
+					f.setItem(list);
+					f.setPages((userList.size()+itemsPerPage-1)/itemsPerPage);
+					f.setTotal(userList.size());
+					List<Follow> issetMyFollows = followService.getMyFollows(Util.parseTokenToUser(authStringe).getId());
+					List<Follow> issetMyFollowed = followService.getMyFollowed(Util.parseTokenToUser(authStringe).getId());
+					
+					List<Usuario> myFollows = issetMyFollows.stream().map(Follow::getFollowed).collect(Collectors.toList());
+					List<Integer> myFollowsIds = myFollows.stream().map(Usuario::getId).collect(Collectors.toList());
+					f.setFollowing(myFollowsIds);
+					List<Usuario> myFollowed = issetMyFollowed.stream().map(Follow::getFollowed).collect(Collectors.toList());
+					List<Integer> myFollowedIds = myFollowed.stream().map(Usuario::getId).collect(Collectors.toList());
+					f.setFollowed(myFollowedIds);
+					json = writer.writeValueAsString(f);
+
+				} catch (JsonProcessingException e) {
+					e.printStackTrace();
+				}
+				return Response.status(Response.Status.OK).entity(json.toString()).build();
+			}else{
+				JsonObject msj = Json.createObjectBuilder()
+						.add("msj", "no existen usuarios para pagina: "+(page-1)).build();
+				return Response.status(Response.Status.NOT_FOUND).entity(msj.toString()).build();
+			}
+		}
+		JsonObject msj = Json.createObjectBuilder()
+				.add("msj", "error al consultar lista de usuarios").build();
+		return Response.status(Response.Status.OK).entity(msj.toString()).build();
+	}
+	
+	@GET
+	@Path("/users/{type}/{pageParam}/{latitude}/{longitude}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getUsersLocation(@HeaderParam("authorization") String authStringe, @PathParam("type") String type, @PathParam("pageParam") int pageParam, @PathParam("latitude") String latitude, @PathParam("longitude") String longitude){
+		if(!Util.parseToken(authStringe)){
+			JsonObject msj = Json.createObjectBuilder()
+					.add("error", "-1").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
+		}
+		if(type!=null){
+
+			List<Usuario> userList = usuarioService.getAllUsersLocation(type, latitude, longitude);
 			int itemsPerPage = 5;
 			int page = 1;
 			if(pageParam!=0) {

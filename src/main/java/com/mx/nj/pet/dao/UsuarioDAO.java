@@ -9,6 +9,8 @@ public interface UsuarioDAO {
 
 	List<Usuario> getAllUsers(String type);
 	
+	List<Usuario> getAllUsersLocation(String type, String latitude, String longitude);
+	
 	List<ServicePet> getUsersService(int idUser);
 
 	Usuario getUserByEmail(String email);

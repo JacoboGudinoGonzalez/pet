@@ -33,7 +33,6 @@ public class Appointment {
 	@Column(name="to_date")
 	Date toDate;			
 
-
 	@ManyToOne
 	@JoinColumn(name="from_user", nullable=false)
 	Usuario fromUser;
@@ -41,19 +40,26 @@ public class Appointment {
 	@ManyToOne
 	@JoinColumn(name="to_user", nullable=false)
 	Usuario toUser;
+
+	@OneToOne
+	@JoinColumn(name="pet", nullable=false)
+	Pet pet;
+	
+	@Column(name="rating")
+	int rating;
+	
+	@Column(name="review")
+	String review;
 	
 	@Column(name="status")
 	int status;
 	
-	@OneToOne
-	@JoinColumn(name="pet", nullable=false)
-	Pet pet;
 	
 	public Appointment() {
 		super();
 	}
 
-	public Appointment(Integer id, int service, Date fromDate, Date toDate, Usuario fromUser, Usuario toUser, int status, Pet pet) {
+	public Appointment(Integer id, int service, Date fromDate, Date toDate, Usuario fromUser, Usuario toUser, Pet pet, int rating, String review, int status) {
 		super();
 		this.id = id;
 		this.service = service;
@@ -61,6 +67,9 @@ public class Appointment {
 		this.toDate = toDate;
 		this.fromUser = fromUser;
 		this.toUser = toUser;
+		this.pet = pet;
+		this.rating = rating;
+		this.review = review;
 		this.status = status;
 	}
 
@@ -112,20 +121,36 @@ public class Appointment {
 		this.toUser = toUser;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
 	public Pet getPet() {
 		return pet;
 	}
 
 	public void setPet(Pet pet) {
 		this.pet = pet;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
+	public String getReview() {
+		return review;
+	}
+
+	public void setReview(String review) {
+		this.review = review;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 }

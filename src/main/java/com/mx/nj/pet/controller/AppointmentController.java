@@ -244,7 +244,7 @@ public class AppointmentController {
 	@Path("/appointment/{id}/{status}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteMessage(@HeaderParam("authorization") String authStringe, @PathParam("id") int id, @PathParam("status") int status){
+	public Response changeAppointmentStatus(@HeaderParam("authorization") String authStringe, @PathParam("id") int id, @PathParam("status") int status){
 		if(!Util.parseToken(authStringe)){
 			JsonObject msj = Json.createObjectBuilder()
 					.add("error", "-1").build();
@@ -252,6 +252,24 @@ public class AppointmentController {
 		}
 
 		appointmentService.changeAppointmentStatus(id, status);
+
+		JsonObject msj = Json.createObjectBuilder()
+				.add("msj", "0").build();
+		return Response.status(Response.Status.OK).entity(msj.toString()).build();
+	}
+	
+	@PUT
+	@Path("/appointment/{id}/{rating}/{review}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response changeAppointmentReview(@HeaderParam("authorization") String authStringe, @PathParam("id") int id, @PathParam("rating") int rating, @PathParam("review") String review ){
+		if(!Util.parseToken(authStringe)){
+			JsonObject msj = Json.createObjectBuilder()
+					.add("error", "-1").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity(msj.toString()).build();
+		}
+
+		appointmentService.changeAppointmentReview(id, rating, review);
 
 		JsonObject msj = Json.createObjectBuilder()
 				.add("msj", "0").build();

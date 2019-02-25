@@ -2,6 +2,7 @@ package com.mx.nj.pet.dao.impl;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.mx.nj.pet.dao.UsuarioDAO;
 import com.mx.nj.pet.model.ServicePet;
 import com.mx.nj.pet.model.Usuario;
+import com.mx.nj.pet.util.Util;
 
 @Repository
 public class UsuarioDAOImpl implements UsuarioDAO{
@@ -47,6 +49,42 @@ public class UsuarioDAOImpl implements UsuarioDAO{
 				u.setCoordinates((String)obj[8]);
 				u.setAddress((String)obj[9]);
 				userList.add(u);
+			}
+		}
+		return userList;
+	}
+	
+	@Override
+	public List<Usuario> getAllUsersLocation(String type, String latitude, String longitude) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Query query = session.createQuery("select u.id, u.name, u.type, u.image, u.email, u.tel, u.rating, u.description, u.coordinates, u.address"
+				+ " from Usuario u where u.type != :type ")
+				.setParameter("type", type);	
+
+		List<Object[]> objectList = query.list();
+		List<Usuario> userList = new ArrayList<Usuario>();
+		if(objectList.size()!=0){
+			for(Object[] obj:objectList ){
+				Usuario u = new Usuario();
+				u.setId((Integer)obj[0]);
+				u.setName((String)obj[1]);
+				u.setType((String)obj[2]);
+				u.setImage((String)obj[3]);
+				u.setEmail((String)obj[4]);
+				u.setTel((String)obj[5]);
+				u.setRating((Integer)obj[6]);
+				u.setDescription((String)obj[7]);
+				u.setCoordinates((String)obj[8]);
+				u.setAddress((String)obj[9]);
+				if(u.getCoordinates()!=null	) {
+					if(u.getCoordinates().contains(",")) {
+						List<String> coordinates = Arrays.asList(u.getCoordinates().split(","));
+						double distance = Util.distance(Double.parseDouble(latitude), Double.parseDouble(longitude), Double.parseDouble(coordinates.get(0)), Double.parseDouble(coordinates.get(1)));
+						if(distance<3) {
+							userList.add(u);
+						}
+					}
+				}
 			}
 		}
 		return userList;

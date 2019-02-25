@@ -36,7 +36,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
 		Session session = this.sessionFactory.getCurrentSession();	
 
-		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.status FROM Appointment a WHERE a.status!=0 AND a.fromUser =:fromUser ORDER BY a.fromDate DESC";
+		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.rating, a.review, a.status FROM Appointment a WHERE a.status!=0 AND a.fromUser =:fromUser ORDER BY a.fromDate DESC";
 		Query query = session.createQuery(hql);
 		Usuario usuario = (Usuario) session.get(Usuario.class, fromUser);
 		query.setParameter("fromUser", usuario);
@@ -51,7 +51,9 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 				a.setToDate((Date)obj[3]);
 				a.setFromUser((Usuario)obj[4]);
 				a.setToUser((Usuario)obj[5]);
-				a.setStatus((Integer)obj[6]);
+				a.setRating((Integer)obj[6]);
+				a.setReview((String)obj[7]);
+				a.setStatus((Integer)obj[8]);
 				appointmentList.add(a);
 			}
 		}
@@ -63,7 +65,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
 		Session session = this.sessionFactory.getCurrentSession();	
 
-		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.status FROM Appointment a WHERE a.status!=0 AND a.toUser =:toUser ORDER BY a.fromDate DESC";
+		String hql = "SELECT a.id, a.service, a.fromDate, a.toDate, a.fromUser, a.toUser, a.rating, a.review, a.status FROM Appointment a WHERE a.status!=0 AND a.toUser =:toUser ORDER BY a.fromDate DESC";
 		Query query = session.createQuery(hql);
 		Usuario usuario = (Usuario) session.get(Usuario.class, toUser);
 		query.setParameter("toUser", usuario);
@@ -78,7 +80,9 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 				a.setToDate((Date)obj[3]);
 				a.setFromUser((Usuario)obj[4]);
 				a.setToUser((Usuario)obj[5]);
-				a.setStatus((Integer)obj[6]);
+				a.setRating((Integer)obj[6]);
+				a.setReview((String)obj[7]);
+				a.setStatus((Integer)obj[8]);
 				appointmentList.add(a);
 			}
 		}
@@ -104,6 +108,14 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query q = session.createQuery("UPDATE Appointment a SET a.status=:status WHERE a.id =:appointmentId")
 				.setParameter("appointmentId", appointmentId).setParameter("status", status);
+		q.executeUpdate();
+	}
+	
+	@Override
+	public void changeAppointmentReview(int appointmentId, int rating, String review) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Query q = session.createQuery("UPDATE Appointment a SET a.rating=:rating, a.review=:review WHERE a.id =:appointmentId")
+				.setParameter("appointmentId", appointmentId).setParameter("rating", rating).setParameter("review", review);
 		q.executeUpdate();
 	}
 }

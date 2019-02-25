@@ -25,6 +25,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 	
 	@Transactional
+	public List<Usuario> getAllUsersLocation(String type, String latitude, String longitude) {
+		return usuarioDao.getAllUsersLocation(type, latitude, longitude);
+	}
+	
+	@Transactional
 	public List<ServicePet> getUsersService(int idUser) {
 		return usuarioDao.getUsersService(idUser);
 	}
