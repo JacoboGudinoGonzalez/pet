@@ -17,6 +17,10 @@
 		<servlet-name>jersey-serlvet</servlet-name>
 		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 		<init-param>
+			<param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+			<param-value>com.mx.nj.pet.controller.CORSFilter</param-value>
+		</init-param>
+		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>com.mx.nj.pet</param-value>
 		</init-param>
