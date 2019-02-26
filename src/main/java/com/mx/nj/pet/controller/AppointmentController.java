@@ -110,9 +110,9 @@ public class AppointmentController {
 
 				Pagination p = new Pagination();
 				p.setItem(list);
-				p.setPages((list.size()+itemsPerPage-1)/itemsPerPage);
+				p.setPages((appointmentList.size()+itemsPerPage-1)/itemsPerPage);
 				p.setItemsPerPage(itemsPerPage);
-				p.setTotal(list.size());
+				p.setTotal(appointmentList.size());
 
 				json = writer.writeValueAsString(p);
 
